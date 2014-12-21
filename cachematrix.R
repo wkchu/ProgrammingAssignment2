@@ -45,22 +45,24 @@ makeCacheMatrix <- function(mat = matrix()) {
     }
     
     # initialization
-    if (length(mat) == 0) {
-        stop("Matrix size should be larger than 0")
-    }
     mat_inv <- NULL
-    # set function
+
+    # set() function
     set <- function(m) {
         mat <<- m
         mat_inv <<- NULL
     }
-    # get function
+
+    # get() function
     get <- function() { mat }
-    # setsolve() function to store calculated inverse matrix in cached
+
+    # setsolve() function : store calculated inverse matrix in cache
     setsolve <- function(s) { mat_inv <<- s }
-    # getsolve() function to retrieve cached data if found
+
+    # getsolve() function : retrieve cached data
     getsolve <- function() { mat_inv }
-    # return function attributes
+
+    # return a list of function attributes
     list( set = set, get = get, setsolve = setsolve, getsolve = getsolve)
 }
 
@@ -75,23 +77,24 @@ makeCacheMatrix <- function(mat = matrix()) {
 cacheSolve <- function(x, ...) {
     # sanity check
     if (length(x) != 4 || is.null(names(x)) || names(x)[1] != "set") {
-        stop("Input must be a cacheMatrix type object.")
+        stop("The input must be a cacheMatrix type object.")
     }
     
-    # Get inverse matrix from cache
+    # Retrieve matrix inverse from cache
     mat_inv <- x$getsolve()
     if (! is.null(mat_inv)) {
         message("Getting cached inverse matrix")
         return(mat_inv)
     }
     
-    # Invert the matrix
+    # Not found, run solve() to invert the matrix
     data <- x$get()
     mat_inv <- solve(data, ...)
     
-    # store in cache
+    # store matrix inverse in cache
     x$setsolve(mat_inv)
     
-    # return the solved inverse matrix
+    # return the matrix inverse
     mat_inv
 }
+
